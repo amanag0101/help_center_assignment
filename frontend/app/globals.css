@@ -11,3 +11,44 @@
 h1 {
   font-size: 2.125rem;
 }
+
+/* Skeleton shimmer effect */
+@keyframes shimmerAnimation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.shimmer-animation {
+  background: linear-gradient(90deg, transparent, #dadbf0, transparent);
+  background-size: 200% 100%;
+  animation: shimmerAnimation 1.5s infinite;
+}
+
+/* Scrollbar */
+@layer utilities {
+  ::-webkit-scrollbar {
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #313131;
+    /* border-radius: 100vh; */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #d48fca;
+    /* border-radius: 100vh; */
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    border: 1px solid #ffffff;
+  }
+
+  ::-webkit-scrollbar-corner {
+    display: none;
+  }
+}
