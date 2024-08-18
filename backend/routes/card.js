@@ -1,5 +1,10 @@
 import express from "express";
-import { createCard, getAllCards, getCardByTitle } from "../controller/card.js";
+import {
+  createCard,
+  getAllCards,
+  getCardByTitle,
+  searchCard,
+} from "../controller/card.js";
 
 const router = express.Router();
 
@@ -61,21 +66,21 @@ router.route("/").get(getAllCards);
 
 /**
  * @swagger
- * /card/{title}:
+ * /card/title:
  *   get:
- *     summary: Retrieve a card by its title
- *     description: Fetch a card from the database using its title.
+ *     summary: Get a card by title
+ *     description: Retrieves a card by its title. If a card with the specified title exists, it is returned. Otherwise, a 404 error is returned.
  *     parameters:
- *       - in: path
+ *       - in: query
  *         name: title
  *         required: true
- *         description: Title of the card to retrieve
+ *         description: The title of the card to retrieve.
  *         schema:
  *           type: string
- *           example: "Card Title"
+ *           example: "Example Card Title"
  *     responses:
  *       200:
- *         description: A card object
+ *         description: Card found successfully
  *         content:
  *           application/json:
  *             schema:
@@ -86,7 +91,7 @@ router.route("/").get(getAllCards);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: Success
+ *                   example: "Success"
  *                 data:
  *                   type: object
  *                   properties:
@@ -95,10 +100,10 @@ router.route("/").get(getAllCards);
  *                       example: 1
  *                     title:
  *                       type: string
- *                       example: "Card Title"
+ *                       example: "Example Card Title"
  *                     description:
  *                       type: string
- *                       example: "Card Description"
+ *                       example: "This is a description of the card."
  *       404:
  *         description: Card not found
  *         content:
@@ -111,7 +116,13 @@ router.route("/").get(getAllCards);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: Bad Request
+ *                   example: "Bad Request"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     msg:
+ *                       type: string
+ *                       example: "No card present with the title: Example Card Title"
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -124,15 +135,79 @@ router.route("/").get(getAllCards);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: Internal Server Error
+ *                   example: "Internal Server Error"
  *                 data:
  *                   type: object
  *                   properties:
  *                     msg:
  *                       type: string
- *                       example: Failed to get card with title.
+ *                       example: "Failed to get card with title."
  */
-router.route("/:title").get(getCardByTitle);
+router.route("/title").get(getCardByTitle);
+
+/**
+ * @swagger
+ * /card/search:
+ *   get:
+ *     summary: Search for cards by title
+ *     description: Searches for cards that contain the specified title in their title field.
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         required: true
+ *         description: The title to search for in the cards.
+ *         schema:
+ *           type: string
+ *           example: "Example Card Title"
+ *     responses:
+ *       200:
+ *         description: Cards found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Success"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         example: 1
+ *                       title:
+ *                         type: string
+ *                         example: "Example Card Title"
+ *                       description:
+ *                         type: string
+ *                         example: "This is a description of the card."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal Server Error"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     msg:
+ *                       type: string
+ *                       example: "Failed to search card."
+ */
+router.route("/search").get(searchCard);
 
 /**
  * @swagger

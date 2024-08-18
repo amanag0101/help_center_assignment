@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { RESPONSE_CODE } from "../constants/response-code.js";
 import { Card } from "../models/Card.js";
 import { response } from "../utils/response.js";
@@ -22,7 +23,7 @@ export const getAllCards = async (_, res) => {
 
 export const getCardByTitle = async (req, res) => {
   try {
-    const { title } = req.params;
+    const { title } = req.query;
 
     console.log("Recived request to get card by title: " + title);
 
@@ -42,6 +43,32 @@ export const getCardByTitle = async (req, res) => {
     return res.status(RESPONSE_CODE.INTERNAL_SERVER_ERROR).json(
       response(false, "Internal Server Error", {
         msg: "Failed to get card with title.",
+      })
+    );
+  }
+};
+
+export const searchCard = async (req, res) => {
+  try {
+    const { title } = req.query;
+
+    console.log("Recived request to search card by title: " + title);
+
+    const cards = await Card.findAll({
+      where: {
+        title: {
+          [Op.like]: `%${title}%`,
+        },
+      },
+    });
+
+    return res.status(RESPONSE_CODE.OK).json(response(true, "Success", cards));
+  } catch (error) {
+    console.error(`Failed to search card: ${error}`);
+
+    return res.status(RESPONSE_CODE.INTERNAL_SERVER_ERROR).json(
+      response(false, "Internal Server Error", {
+        msg: "Failed to search card.",
       })
     );
   }
@@ -71,7 +98,7 @@ export const createCard = async (req, res) => {
     } else if ((error.name = "SequelizeUniqueConstraintError")) {
       return res.status(RESPONSE_CODE.BAD_REQUEST).json(
         response(false, "Validation error", {
-          msg: "A card with the same title is already created!s",
+          msg: "A card with the same title is already created!",
         })
       );
     }
