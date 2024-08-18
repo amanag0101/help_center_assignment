@@ -68,7 +68,7 @@ export default function Home() {
         <h1>How can we help ?</h1>
 
         <Input
-          className="border border-gray-500 w-[80%] md:w-[50%] p-2"
+          className="border border-gray-500 w-[80%] md:w-[50%] p-2 bg-[url('/icons/arrow.svg')] bg-no-repeat bg-[calc(100%-12px)_center] bg-[length:15px_15px] pr-[30px]"
           name="search"
           value={searchKey}
           type="text"
